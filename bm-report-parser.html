@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp BM Downtime Parser</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .export-btn {
+            background-color: #28a745;
+        }
+        
+        .export-btn:hover {
+            background-color: #1e7e34;
+        }
+        
+        .clear-btn {
+            background-color: #dc3545;
+        }
+        
+        .clear-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .results {
+            margin-top: 30px;
+        }
+        
+        .report-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .report-header {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .report-field {
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .field-label {
+            font-weight: bold;
+            color: #495057;
+            min-width: 150px;
+            margin-right: 10px;
+        }
+        
+        .field-value {
+            flex: 1;
+            color: #333;
+        }
+        
+        .countermeasures-list {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+        
+        .countermeasures-list li {
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        .stats {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stats strong {
+            color: #007bff;
+            font-size: 18px;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .small-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .field-label {
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 WhatsApp BM Downtime Parser</h1>
+        
+        <div class="input-section">
+            <label for="messageInput">Paste your WhatsApp messages here (one or multiple messages):</label>
+            <textarea id="messageInput" placeholder="Example:
+[7/7 2.47 PM] +62 811-9007-5160: *[BM Downtime]* 
+* *Date :* 07/07/2025
+* *Time :* 14.08 - 14.25
+- *Machine :* Unloader 4-1
+* *Alarm :* Tray buffer c/v 2 guide cylinder forward status fault
+..."></textarea>
+        </div>
+        
+        <div class="button-group">
+            <button onclick="parseMessages()">📊 Parse Messages</button>
+            <button onclick="loadSampleData()">📝 Load Sample Data</button>
+            <button onclick="exportJSON()" class="export-btn" id="exportJsonBtn" disabled>📥 Export JSON</button>
+            <button onclick="exportCSV()" class="export-btn" id="exportCsvBtn" disabled>📊 Export CSV</button>
+            <button onclick="clearAll()" class="clear-btn">🗑️ Clear All</button>
+        </div>
+        
+        <div id="message"></div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // TypeScript-like class structure (converted to JavaScript)
+        class WhatsAppDowntimeParser {
+            constructor() {
+                this.reports = [];
+            }
+
+            // Method to clean content by removing asterisks and other formatting
+            cleanContent(content) {
+                 // Step 1: Only handle asterisk bullet points in countermeasure section
+                let cleaned = content;
+                
+                // Find countermeasure section and convert asterisk bullets only there
+                const countermeasureRegex = /(countermeasure\s*:?\s*[\s\S]*?)(?=\*\s*part replacement|\*\s*result|$)/i;
+                const countermeasureMatch = cleaned.match(countermeasureRegex);
+                
+                if (countermeasureMatch) {
+                    const countermeasureSection = countermeasureMatch[1];
+                    const cleanedCountermeasure = countermeasureSection
+                        // Convert asterisk bullets to dash bullets in countermeasure section
+                        .replace(/^(\s*)\*\s+/gm, '$1- ')
+                        // Convert asterisk bullets in the middle of lines
+                        .replace(/(\n\s*)\*\s+/g, '$1- ');
+                    
+                    // Replace the countermeasure section with cleaned version
+                    cleaned = cleaned.replace(countermeasureSection, cleanedCountermeasure);
+                }
+                
+                // Step 2: General cleanup
+                cleaned = cleaned
+                    // Remove asterisks around field names and values
+                    .replace(/\*+([^*\n]+)\*+/g, '$1')
+                    // Remove standalone asterisks
+                    .replace(/\*+/g, '')
+                    // Replace bullet points with standardized format
+                    .replace(/^[-•*]\s*/gm, '- ')
+                    // Replace numbered lists with standardized format
+                    .replace(/^\d+\.\s*/gm, '- ')
+                    // Clean up extra whitespace
+                    .replace(/\s+/g, ' ')
+                    // Clean up multiple line breaks
+                    .replace(/\n\s*\n/g, '\n')
+                    // Remove emojis and special characters but keep basic punctuation
+                    .replace(/[✅❌️]/g, '')
+                    // Clean up colons and spacing
+                    .replace(/\s*:\s*/g, ': ')
+                    .trim();
+                
+                return cleaned;
+            }
+
+            parseMessage(message) {
+                // Extract phone number and timestamp from the message header
+                const headerMatch = message.match(/\[(\d{1,2}\/\d{1,2} \d{1,2}\.\d{2} [AP]M)\] (\+\d{2} \d{3}-\d{4}-\d{4}):/);
+                
+                if (!headerMatch) {
+                    console.warn('Could not parse message header');
+                    return null;
+                }
+
+                const [, timestamp, phoneNumber] = headerMatch;
+                
+                // Extract the main content after the header
+                let content = message.substring(message.indexOf(':') + 1).trim();
+                
+                // Clean asterisks and other formatting characters
+                content = this.cleanContent(content);
+                
+                // Parse individual fields using regex patterns (now working with cleaned content)
+                const dateMatch = content.match(/Date\s*:?\s*(\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{4})/i);
+                const timeMatch = content.match(/Time\s*:?\s*(\d{2}\.\d{2}\s*-\s*\d{2}\.\d{2})/i);
+                const machineMatch = content.match(/Machine\s*:?\s*([\s\S]*?)(?=Alarm|Cause|Countermeasure)/i);
+                const alarmMatch = content.match(/Alarm\s*:?\s*([\s\S]*?)(?=Cause|Countermeasure|Phenomenon)/i);
+                const phenomenonMatch = content.match(/Phenomenon\s*:?\s*([\s\S]*?)(?=Cause|Countermeasure)/i);
+                const causeMatch = content.match(/Cause\s*:?\s*([\s\S]*?)(?=Countermeasure|Part Replacement|Result)/i);
+                const countermeasureMatch = content.match(/Countermeasure\s*:?\s*([\s\S]*?)(?=Part Replacement|Result)/i);
+                const partReplacementMatch = content.match(/Part Replacement\s*:?\s*([\s\S]*?)(?=PIC|Result)/i);
+                const resultMatch = content.match(/Result\s*:?\s*([\s\S]*?)(?=PIC)/i);
+                const picMatch = content.match(/PIC\s*:?\s*([^\n]+)/i);
+
+                // Parse countermeasures into array
+                const countermeasures = [];
+                if (countermeasureMatch) {
+                    const countermeasureText = countermeasureMatch[1].trim();
+                    // Split by bullet points or line breaks and clean up
+                    const steps = countermeasureText.split(/[-•*]\s*/).filter(step => step.trim());
+                    countermeasures.push(...steps.map(step => step.trim().replace(/\s+/g, ' ').replace(/[✅❌]/g, '').trim()));
+                }
+
+                // Generate unique ID
+                const id = `${phoneNumber.replace(/\D/g, '')}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+
+                const report = {
+                    id,
+                    phoneNumber: phoneNumber || '',
+                    timestamp: timestamp || '',
+                    date: dateMatch ? dateMatch[1] : '',
+                    time: timeMatch ? timeMatch[1] : '',
+                    machine: machineMatch ? machineMatch[1].trim() : '',
+                    alarm: alarmMatch ? alarmMatch[1].trim() : '',
+                    phenomenon: phenomenonMatch ? phenomenonMatch[1].trim().replace(/\s+/g, ' ') : '',
+                    cause: causeMatch ? causeMatch[1].trim().replace(/\s+/g, ' ') : '',
+                    countermeasures,
+                    partReplacement: partReplacementMatch ? partReplacementMatch[1].trim() : '',
+                    result: resultMatch ? resultMatch[1].trim() : '',
+                    pic: picMatch ? picMatch[1].trim() : '',
+                    rawMessage: message
+                };
+
+                return report;
+            }
+
+            parseMessages(messages) {
+                const parsedReports = [];
+                
+                messages.forEach((message, index) => {
+                    const report = this.parseMessage(message);
+                    if (report) {
+                        parsedReports.push(report);
+                    }
+                });
+
+                this.reports = parsedReports;
+                return parsedReports;
+            }
+
+            getReports() {
+                return this.reports;
+            }
+
+            exportToJSON() {
+                return JSON.stringify(this.reports, null, 2);
+            }
+
+            exportToCSV() {
+                if (this.reports.length === 0) return '';
+
+                const headers = [
+                    'ID', 'Phone Number', 'Timestamp', 'Date', 'Time', 'Machine', 
+                    'Alarm', 'Phenomenon', 'Cause', 'Countermeasures', 
+                    'Part Replacement', 'Result', 'PIC'
+                ];
+
+                const csvRows = [
+                    headers.join(','),
+                    ...this.reports.map(report => [
+                        report.id,
+                        report.phoneNumber,
+                        report.timestamp,
+                        report.date,
+                        report.time,
+                        report.machine,
+                        `"${report.alarm}"`,
+                        `"${report.phenomenon || ''}"`,
+                        `"${report.cause}"`,
+                        `"${report.countermeasures.join('; ')}"`,
+                        `"${report.partReplacement}"`,
+                        `"${report.result}"`,
+                        `"${report.pic}"`
+                    ].join(','))
+                ];
+
+                return csvRows.join('\n');
+            }
+        }
+
+        // Global parser instance
+        const parser = new WhatsAppDowntimeParser();
+
+        // Sample data for testing
+        const sampleMessages = [
+            `[7/7 2.47 PM] +62 811-9007-5160: *[BM Downtime]* 
+* *Date :* 07/07/2025
+* *Time :* 14.08 - 14.25
+- *Machine :* Unloader 4-1
+* *Alarm :* Tray buffer c/v 2 guide cylinder forward status fault
+* *Cause :* sensor cylinder forward not detect ( possibility from stopper tray buffer CV2 abnormal)
+* *Countermeasure :* 
+- Check alarm in hmi
+- Check cylinder tray buffer c/v 2
+- Check sensor cylinder (sensor forward not detect)❌️
+- Reposition tray 
+- Found absorber stopper buffer CV/2 jammed
+- Lubricate absorber
+- Manual movement cylinder forward / backward ✅️
+- Ready all proces & run
+* *Part Replacement*: -
+* *Result :* On monitoring
+* *PIC :* Arwan, Rohman, Arief (BM tech)`,
+
+            `[7/7 3.50 PM] +62 811-9007-5073: *[BM Downtime]*
+*• Date* : 07/ 07/ 2025
+*• Time*  : 15.25 - 15.50
+*• Machine* :  Cutter 3B (+)
+*• Alarm* : Vision continous NG exceed
+*• Phenomenon* : 
+1. NG EW & NG Align up
+*• Cause*: 
+1. Frame gripper MC side upper broken
+*• Countermeasure* : 
+1. Check condition frame gripper
+2. Check spare
+3. Replace Frame With New 
+4. Install Frame gripper and monitoring
+*• Result* : Solved
+*• PIC* : Slamet, Allen, Hendro.`,
+
+            `[7/7 4.45 PM] +62 811-9007-5160: *[BM Downtime]* 
+* *Date* : 07-07-2025
+* *Time* : 15.14 - 15.48
+* *Machine*: STK 2-D6
+* *Alarm* : no alarm
+* *Phenomenon* : Continues NG appearance on inspection 
+* *Cause* : Sepa wrinkle
+* *Countermeasure :* 
+* Check flatness cell winder 
+* Adjust stopper clamp/unclamp cell winder
+* Adjust servo offset R winder 1 & winder 2
+* Homing servo R
+* Setting Allignment cell winder using master jig
+* Ready all process 
+* Running
+- *Part Replacement:* -
+* *Result :* Solved on monitoring
+* *PIC :* *Rohman, Irza, Arief (BM), Mr.Taufik (Tech)*`
+        ];
+
+        function showMessage(text, type = 'info') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        function parseMessages() {
+            const input = document.getElementById('messageInput').value.trim();
+            
+            if (!input) {
+                showMessage('Please paste your WhatsApp messages first!', 'error');
+                return;
+            }
+
+            try {
+                // Split messages by WhatsApp timestamp pattern
+                const messages = input.split(/(?=\[\d{1,2}\/\d{1,2} \d{1,2}\.\d{2} [AP]M\])/).filter(msg => msg.trim());
+                
+                if (messages.length === 0) {
+                    showMessage('No valid WhatsApp messages found!', 'error');
+                    return;
+                }
+
+                const reports = parser.parseMessages(messages);
+                
+                if (reports.length === 0) {
+                    showMessage('Could not parse any messages. Please check the format.', 'error');
+                    return;
+                }
+
+                displayResults(reports);
+                enableExportButtons();
+                showMessage(`Successfully parsed ${reports.length} message(s)!`, 'success');
+                
+            } catch (error) {
+                showMessage(`Error parsing messages: ${error.message}`, 'error');
+            }
+        }
+
+        function displayResults(reports) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = `
+                <div class="stats">
+                    <strong>${reports.length}</strong> downtime reports parsed
+                </div>
+            `;
+
+            reports.forEach((report, index) => {
+                html += `
+                    <div class="report-card">
+                        <div class="report-header">
+                            Report #${index + 1} - ${report.machine}
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Phone Number:</span>
+                            <span class="field-value">${report.phoneNumber}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Timestamp:</span>
+                            <span class="field-value">${report.timestamp}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Date:</span>
+                            <span class="field-value">${report.date}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Time:</span>
+                            <span class="field-value">${report.time}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Machine:</span>
+                            <span class="field-value">${report.machine}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Alarm:</span>
+                            <span class="field-value">${report.alarm}</span>
+                        </div>
+                        
+                        ${report.phenomenon ? `
+                        <div class="report-field">
+                            <span class="field-label">Phenomenon:</span>
+                            <span class="field-value">${report.phenomenon}</span>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="report-field">
+                            <span class="field-label">Cause:</span>
+                            <span class="field-value">${report.cause}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Countermeasures:</span>
+                            <div class="field-value">
+                                <ul class="countermeasures-list">
+                                    ${report.countermeasures.map(cm => `<li>${cm}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Part Replacement:</span>
+                            <span class="field-value">${report.partReplacement}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Result:</span>
+                            <span class="field-value">${report.result}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">PIC:</span>
+                            <span class="field-value">${report.pic}</span>
+                        </div>
+                        
+                        <div class="report-field">
+                            <span class="field-label">Report ID:</span>
+                            <span class="field-value small-text">${report.id}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function loadSampleData() {
+            document.getElementById('messageInput').value = sampleMessages.join('\n\n');
+            showMessage('Sample data loaded! Click "Parse Messages" to process.', 'success');
+        }
+
+        function enableExportButtons() {
+            document.getElementById('exportJsonBtn').disabled = false;
+            document.getElementById('exportCsvBtn').disabled = false;
+        }
+
+        function exportJSON() {
+            const jsonData = parser.exportToJSON();
+            downloadFile(jsonData, 'downtime_reports.json', 'application/json');
+        }
+
+        function exportCSV() {
+            const csvData = parser.exportToCSV();
+            downloadFile(csvData, 'downtime_reports.csv', 'text/csv');
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showMessage(`${filename} downloaded successfully!`, 'success');
+        }
+
+        function clearAll() {
+            document.getElementById('messageInput').value = '';
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('exportJsonBtn').disabled = true;
+            document.getElementById('exportCsvBtn').disabled = true;
+            parser.reports = [];
+            showMessage('All data cleared!', 'success');
+        }
+    </script>
+</body>
+</html>
