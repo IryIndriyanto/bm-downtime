@@ -12,7 +12,7 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
-        
+
         .container {
             background: white;
             padding: 30px;
@@ -20,24 +20,24 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
-        
+
         h1 {
             color: #333;
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .input-section {
             margin-bottom: 30px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 10px;
             font-weight: bold;
             color: #555;
         }
-        
+
         textarea {
             width: 100%;
             height: 200px;
@@ -49,14 +49,14 @@
             resize: vertical;
             box-sizing: border-box;
         }
-        
+
         .button-group {
             display: flex;
             gap: 10px;
             margin: 20px 0;
             flex-wrap: wrap;
         }
-        
+
         button {
             padding: 12px 24px;
             background-color: #007bff;
@@ -67,36 +67,36 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
-        
+
         button:hover {
             background-color: #0056b3;
         }
-        
+
         button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
-        
+
         .export-btn {
             background-color: #28a745;
         }
-        
+
         .export-btn:hover {
             background-color: #1e7e34;
         }
-        
+
         .clear-btn {
             background-color: #dc3545;
         }
-        
+
         .clear-btn:hover {
             background-color: #c82333;
         }
-        
+
         .results {
             margin-top: 30px;
         }
-        
+
         .report-card {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -105,7 +105,7 @@
             margin-bottom: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
+
         .report-header {
             background: #007bff;
             color: white;
@@ -114,35 +114,35 @@
             margin-bottom: 15px;
             font-weight: bold;
         }
-        
+
         .report-field {
             margin-bottom: 10px;
             display: flex;
             flex-wrap: wrap;
         }
-        
+
         .field-label {
             font-weight: bold;
             color: #495057;
             min-width: 150px;
             margin-right: 10px;
         }
-        
+
         .field-value {
             flex: 1;
             color: #333;
         }
-        
+
         .countermeasures-list {
             margin-top: 5px;
             padding-left: 20px;
         }
-        
+
         .countermeasures-list li {
             margin-bottom: 5px;
             color: #555;
         }
-        
+
         .stats {
             background: #e9ecef;
             padding: 15px;
@@ -150,12 +150,12 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         .stats strong {
             color: #007bff;
             font-size: 18px;
         }
-        
+
         .error {
             background-color: #f8d7da;
             color: #721c24;
@@ -163,7 +163,7 @@
             border-radius: 5px;
             margin: 10px 0;
         }
-        
+
         .success {
             background-color: #d4edda;
             color: #155724;
@@ -171,12 +171,12 @@
             border-radius: 5px;
             margin: 10px 0;
         }
-        
+
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -185,23 +185,23 @@
             overflow: hidden;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
+
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
-        
+
         th {
             background-color: #007bff;
             color: white;
             font-weight: bold;
         }
-        
+
         tr:hover {
             background-color: #f8f9fa;
         }
-        
+
         .small-text {
             font-size: 12px;
             color: #666;
@@ -211,11 +211,11 @@
             .button-group {
                 flex-direction: column;
             }
-            
+
             button {
                 width: 100%;
             }
-            
+
             .field-label {
                 min-width: 100px;
             }
@@ -224,19 +224,19 @@
 </head>
 <body>
     <div class="container">
-<!--         <h1>📱 WhatsApp BM Downtime Parser</h1>
-         -->
+        <h1>📱 WhatsApp BM Downtime Parser</h1>
+
         <div class="input-section">
             <label for="messageInput">Paste your WhatsApp messages here (one or multiple messages):</label>
             <textarea id="messageInput" placeholder="Example:
-[7/7 2.47 PM] +62 811-9007-5160: *[BM Downtime]* 
+[7/7 2.47 PM] +62 811-9007-5160: *[BM Downtime]*
 * *Date :* 07/07/2025
 * *Time :* 14.08 - 14.25
 - *Machine :* Unloader 4-1
 * *Alarm :* Tray buffer c/v 2 guide cylinder forward status fault
 ..."></textarea>
         </div>
-        
+
         <div class="button-group">
             <button onclick="parseMessages()">📊 Parse Messages</button>
             <button onclick="loadSampleData()">📝 Load Sample Data</button>
@@ -244,9 +244,9 @@
             <button onclick="exportCSV()" class="export-btn" id="exportCsvBtn" disabled>📊 Export CSV</button>
             <button onclick="clearAll()" class="clear-btn">🗑️ Clear All</button>
         </div>
-        
+
         <div id="message"></div>
-        
+
         <div id="results"></div>
     </div>
 
@@ -259,101 +259,84 @@
 
             // Method to clean content by removing asterisks and other formatting
             cleanContent(content) {
-                 // Step 1: Only handle asterisk bullet points in countermeasure section
-                let cleaned = content;
-                
-                // Find countermeasure section and convert asterisk bullets only there
-                const countermeasureRegex = /(countermeasure\s*:?\s*[\s\S]*?)(?=\*\s*part replacement|\*\s*result|$)/i;
-                const countermeasureMatch = cleaned.match(countermeasureRegex);
-                
-                if (countermeasureMatch) {
-                    const countermeasureSection = countermeasureMatch[1];
-                    const cleanedCountermeasure = countermeasureSection
-                        // Convert asterisk bullets to dash bullets in countermeasure section
-                        .replace(/^(\s*)\*\s+/gm, '$1- ')
-                        // Convert asterisk bullets in the middle of lines
-                        .replace(/(\n\s*)\*\s+/g, '$1- ');
-                    
-                    // Replace the countermeasure section with cleaned version
-                    cleaned = cleaned.replace(countermeasureSection, cleanedCountermeasure);
-                }
-                
-                // Step 2: General cleanup
-                cleaned = cleaned
+                // General cleanup
+                let cleaned = content
                     // Remove asterisks around field names and values
                     .replace(/\*+([^*\n]+)\*+/g, '$1')
-                    // Remove standalone asterisks
-                    .replace(/\*+/g, '')
-                    // Replace bullet points with standardized format
+                    // Remove standalone asterisks and other symbols used for bullets
+                    .replace(/[>*•÷]/g, '')
+                    // Standardize bullet points
                     .replace(/^[-•*]\s*/gm, '- ')
-                    // Replace numbered lists with standardized format
                     .replace(/^\d+\.\s*/gm, '- ')
-                    // Clean up extra whitespace
-                    .replace(/\s+/g, ' ')
-                    // Clean up multiple line breaks
-                    .replace(/\n\s*\n/g, '\n')
-                    // Remove emojis and special characters but keep basic punctuation
+                    // Remove emojis
                     .replace(/[✅❌️]/g, '')
                     // Clean up colons and spacing
                     .replace(/\s*:\s*/g, ': ')
                     .trim();
-                
+
+                // Handle multi-line sections and lists
+                cleaned = cleaned.replace(/-\s*(\w+[^:]+):\s*([\s\S]*?)(?=\n-\s*\w+[^:]+:|\n\w+[^:]+:|$)/g, (match, p1, p2) => {
+                    return `${p1.trim()}: ${p2.replace(/\n\s*-\s*/g, '; ').trim()}`;
+                });
+
                 return cleaned;
             }
 
             parseMessage(message) {
-                // Extract phone number and timestamp from the message header
-                const headerMatch = message.match(/\[(\d{1,2}\/\d{1,2} \d{1,2}\.\d{2} [AP]M)\] (\+\d{2} \d{3}-\d{4}-\d{4}):/);
-                
+                // Extract timestamp from the message header, accommodating different formats
+                const headerMatch = message.match(/^(?:\[(\d{1,2}\/\d{1,2}\s\d{1,2}\.\d{2}\s[AP]M)\]\s(\+\d{2}\s\d{3}-\d{4}-\d{4}):|(\d{1,2}\/\d{1,2}\/\d{4}, \d{2}:\d{2})\s-\s)/);
+
                 if (!headerMatch) {
                     console.warn('Could not parse message header');
                     return null;
                 }
 
-                const [, timestamp, phoneNumber] = headerMatch;
-                
+                const timestamp = headerMatch[1] || headerMatch[3] || '';
+                const phoneNumber = headerMatch[2] || 'N/A';
+
                 // Extract the main content after the header
-                let content = message.substring(message.indexOf(':') + 1).trim();
-                
+                let content = message.substring(message.indexOf('-') + 1).trim();
+
                 // Clean asterisks and other formatting characters
                 content = this.cleanContent(content);
-                
-                // Parse individual fields using regex patterns (now working with cleaned content)
-                const dateMatch = content.match(/Date\s*:?\s*(\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{4})/i);
-                const timeMatch = content.match(/Time\s*:?\s*(\d{2}\.\d{2}\s*-\s*\d{2}\.\d{2})/i);
-                const machineMatch = content.match(/Machine\s*:?\s*([\s\S]*?)(?=Alarm|Cause|Countermeasure)/i);
-                const alarmMatch = content.match(/Alarm\s*:?\s*([\s\S]*?)(?=Cause|Countermeasure|Phenomenon)/i);
-                const phenomenonMatch = content.match(/Phenomenon\s*:?\s*([\s\S]*?)(?=Cause|Countermeasure)/i);
-                const causeMatch = content.match(/Cause\s*:?\s*([\s\S]*?)(?=Countermeasure|Part Replacement|Result)/i);
-                const countermeasureMatch = content.match(/Countermeasure\s*:?\s*([\s\S]*?)(?=Part Replacement|Result)/i);
-                const partReplacementMatch = content.match(/Part Replacement\s*:?\s*([\s\S]*?)(?=PIC|Result)/i);
-                const resultMatch = content.match(/Result\s*:?\s*([\s\S]*?)(?=PIC)/i);
-                const picMatch = content.match(/PIC\s*:?\s*([^\n]+)/i);
+
+                // Parse individual fields using regex patterns
+                const dateMatch = content.match(/(?:Date|Tanggal)\s*:?\s*([\s\S]*?)(?=\n•?\s*(?:Time|Waktu)|$)/i);
+                const timeMatch = content.match(/(?:Time:)\s*:?\s*([\s\S]*?)(?=\n•?\s*Machine|$)/i);
+                const machineMatch = content.match(/Machine\s*:?\s*([\s\S]*?)(?=\n•?\s*(?:Alarm|Problem|Trouble)|$)/i);
+                const alarmMatch = content.match(/(?:Alarm|Problem)\s*:?\s*([\s\S]*?)(?=\n•?\s*(?:Phenomenon|Cause)|$)/i);
+                const phenomenonMatch = content.match(/(?:Phenomenon|Problem|Trouble)\s*:?\s*([\s\S]*?)(?=\n•?\s*(Cause|Countermeasure)|$)/i);
+                const causeMatch = content.match(/Cause\s*:?\s*([\s\S]*?)(?=\n•?\s*(?:Countermeasure|C\/M)|$)/i);
+                const countermeasureMatch = content.match(/(?:Countermeasure|C\/M)\s*:?\s*([\s\S]*?)(?=\n•?\s*(?:Part Replacement)|$)/i);
+                const partReplacementMatch = content.match(/Part Replacement\s*:?\s*([\s\S]*?)(?=\n•?\s*Result|$)/i);
+                const resultMatch = content.match(/Result\s*:?\s*([\s\S]*?)(?=\n•?\s*PIC|$)/i);
+                const picMatch = content.match(/PIC\s*:?\s*([\s\S]*?)(?=$)/i);
+
 
                 // Parse countermeasures into array
                 const countermeasures = [];
                 if (countermeasureMatch) {
                     const countermeasureText = countermeasureMatch[1].trim();
-                    // Split by bullet points or line breaks and clean up
-                    const steps = countermeasureText.split(/[-•*]\s*/).filter(step => step.trim());
-                    countermeasures.push(...steps.map(step => step.trim().replace(/\s+/g, ' ').replace(/[✅❌]/g, '').trim()));
+                    const steps = countermeasureText.split(/\n-|\n/).filter(step => step.trim());
+                    countermeasures.push(...steps.map(step => step.replace(/[-•*]/g, '').trim()));
                 }
+
 
                 // Generate unique ID
                 const id = `${phoneNumber.replace(/\D/g, '')}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
 
                 const report = {
                     id,
-                    phoneNumber: phoneNumber || '',
-                    timestamp: timestamp || '',
-                    date: dateMatch ? dateMatch[1] : '',
-                    time: timeMatch ? timeMatch[1] : '',
+                    phoneNumber: phoneNumber,
+                    timestamp: timestamp,
+                    date: dateMatch ? dateMatch[1].trim() : '',
+                    time: timeMatch ? timeMatch[1].trim() : '',
                     machine: machineMatch ? machineMatch[1].trim() : '',
-                    alarm: alarmMatch ? alarmMatch[1].trim() : '',
-                    phenomenon: phenomenonMatch ? phenomenonMatch[1].trim().replace(/\s+/g, ' ') : '',
-                    cause: causeMatch ? causeMatch[1].trim().replace(/\s+/g, ' ') : '',
+                    alarm: alarmMatch ? alarmMatch[1].replace(/\n/g, ' ').trim() : '',
+                    phenomenon: phenomenonMatch ? phenomenonMatch[1].replace(/\n/g, ' ').trim() : '',
+                    cause: causeMatch ? causeMatch[1].replace(/\n/g, ' ').trim() : '',
                     countermeasures,
-                    partReplacement: partReplacementMatch ? partReplacementMatch[1].trim() : '',
+                    partReplacement: partReplacementMatch ? partReplacementMatch[1].replace(/\n/g, ' ').trim() : '',
                     result: resultMatch ? resultMatch[1].trim() : '',
                     pic: picMatch ? picMatch[1].trim() : '',
                     rawMessage: message
@@ -364,8 +347,8 @@
 
             parseMessages(messages) {
                 const parsedReports = [];
-                
-                messages.forEach((message, index) => {
+
+                messages.forEach((message) => {
                     const report = this.parseMessage(message);
                     if (report) {
                         parsedReports.push(report);
@@ -388,20 +371,20 @@
                 if (this.reports.length === 0) return '';
 
                 const headers = [
-                    'ID', 'Phone Number', 'Timestamp', 'Date', 'Time', 'Machine', 
-                    'Alarm', 'Phenomenon', 'Cause', 'Countermeasures', 
+                    'ID', 'Phone Number', 'Timestamp', 'Date', 'Time', 'Machine',
+                    'Alarm', 'Phenomenon', 'Cause', 'Countermeasures',
                     'Part Replacement', 'Result', 'PIC'
                 ];
 
                 const csvRows = [
                     headers.join(','),
                     ...this.reports.map(report => [
-                        report.id,
-                        report.phoneNumber,
-                        report.timestamp,
-                        report.date,
-                        report.time,
-                        report.machine,
+                        `"${report.id}"`,
+                        `"${report.phoneNumber}"`,
+                        `"${report.timestamp}"`,
+                        `"${report.date}"`,
+                        `"${report.time}"`,
+                        `"${report.machine}"`,
                         `"${report.alarm}"`,
                         `"${report.phenomenon || ''}"`,
                         `"${report.cause}"`,
@@ -421,60 +404,10 @@
 
         // Sample data for testing
         const sampleMessages = [
-            `[7/7 2.47 PM] +62 811-9007-5160: *[BM Downtime]* 
-* *Date :* 07/07/2025
-* *Time :* 14.08 - 14.25
-- *Machine :* Unloader 4-1
-* *Alarm :* Tray buffer c/v 2 guide cylinder forward status fault
-* *Cause :* sensor cylinder forward not detect ( possibility from stopper tray buffer CV2 abnormal)
-* *Countermeasure :* 
-- Check alarm in hmi
-- Check cylinder tray buffer c/v 2
-- Check sensor cylinder (sensor forward not detect)❌️
-- Reposition tray 
-- Found absorber stopper buffer CV/2 jammed
-- Lubricate absorber
-- Manual movement cylinder forward / backward ✅️
-- Ready all proces & run
-* *Part Replacement*: -
-* *Result :* On monitoring
-* *PIC :* Arwan, Rohman, Arief (BM tech)`,
-
-            `[7/7 3.50 PM] +62 811-9007-5073: *[BM Downtime]*
-*• Date* : 07/ 07/ 2025
-*• Time*  : 15.25 - 15.50
-*• Machine* :  Cutter 3B (+)
-*• Alarm* : Vision continous NG exceed
-*• Phenomenon* : 
-1. NG EW & NG Align up
-*• Cause*: 
-1. Frame gripper MC side upper broken
-*• Countermeasure* : 
-1. Check condition frame gripper
-2. Check spare
-3. Replace Frame With New 
-4. Install Frame gripper and monitoring
-*• Result* : Solved
-*• PIC* : Slamet, Allen, Hendro.`,
-
-            `[7/7 4.45 PM] +62 811-9007-5160: *[BM Downtime]* 
-* *Date* : 07-07-2025
-* *Time* : 15.14 - 15.48
-* *Machine*: STK 2-D6
-* *Alarm* : no alarm
-* *Phenomenon* : Continues NG appearance on inspection 
-* *Cause* : Sepa wrinkle
-* *Countermeasure :* 
-* Check flatness cell winder 
-* Adjust stopper clamp/unclamp cell winder
-* Adjust servo offset R winder 1 & winder 2
-* Homing servo R
-* Setting Allignment cell winder using master jig
-* Ready all process 
-* Running
-- *Part Replacement:* -
-* *Result :* Solved on monitoring
-* *PIC :* *Rohman, Irza, Arief (BM), Mr.Taufik (Tech)*`
+            `18/09/2024, 11:56 - *[BM Downtime]* • *Date* : 18 September 2024 (Morning Shift) • *Time* : 11:35 - 11:40 • *Machine* : STK 1-D6 • *Alarm* : - • *Phenomenon* : Sheet NG Y Axis Noise • *Cause* : Still analyzing • *Countermeasure* : -Check condition Sheet NG ✅ -Check LM Guide Sheet NG✅ -Turn off - turn on ✅ • *Part Replacement* : - • *Result* : Solved & monitoring • *PIC* : BM Tech`,
+            `02/10/2024, 16:59 - *[BM Downtime]* • *Date* : 02/10/2024 • *Time* : 11.26 - 16.17 • *Machine* : - 3-B5 • *Alarm* : - 1st PnP cathode R alarm 31137 fault when determining the position (singgle turn) • *Phenomenon* : - Stacking machine stop when auto running, motor servo 1st PnP cathode R overrun • *Cause* : - encoder signal is lost • *Countermeasure*: - Bending plate body stack table Y1 (+) - Check all sensors stactable mandrel & 1st pnp (+) - Adjustment mandrel Y1 & Y2 (+) - Adjustment pressure mandrel Y1 Y2 (+) - Tidyup cable stack table (+) - Tidy up hose stack table & 1st pnp - Adjust gauge loading unloading 1st pnp & 2nd pnp (+) - Jig stack table - Tightin bolt sensor angel sepa dancer - Repleacment shaft, fitting, connector, pad suction 1st pnp (+) - reset drive and auto tuning (motor no respon, alarm still occured) - change motor servo with holding brake type (anode and cathode) - setting configuration for drive 1st PnP anode and cathode - auto tuning and home position - check movement manual with speed rate 50 ~ 100% (Ok) - Adjustment ROI (Vision) - ready all process and run autorate 90 • *Part Replacement* : - Motor Servo SM35 & SM36 - 1FKZ104-5AFO 1-0MA0 change to 1FK2104-5AF1 1-0MAO (brake type) - Shaft, Fitting, Pad Suction, Connector • *Result* : - Solved • *PIC* : - PLC Tech - BM Tech - Vision`,
+            `12/10/2024, 09:26 - > [BM Downtime] *Date* : 12-10-2024 *Time* : 06.07 ~ 08.48 *Machine* : STK 2-A5 *Alarm* : Pulling Drag Ejector 2 State Fault *Problem* : Nilai Pressure Switch Pulling Drag Ejector tidak tercapai *Cause*: Sepa Wringkle dan tak terhisap Suction *C/M* : - Setting Cycle Time Cylinder Side Block Work 0.05 -> 1.00 - Setting Cylce Time Cylinder Side Block Home 0.05 -> 0.50 - Setting Gap Sepa Cutter dengan Stak Table 0.05 -> 0.03 - Change Parameter Pulling Grip Cut Pos 1440 -> 1442 - ⁠Replace Separator *Result* : Solved On Monitoring *PIC* : BM Tech`,
+            `13/10/2024, 02:01 - > [BM Downtime] • *Date* : 13-10-2024 • *Time* : LS1 - 23.30 • *Machine* : STK 3-D1 • *Alarm* : ÷ Stacking Cell Transfer Pulling Drag Lower Ejector2 State Fault ÷ Stacking Cell Transfer Pulling Grip Fast Forward Moving Error ÷ Stacking Sepa Unwinder Sepa dancer angle range low error • *Problem* : ÷ Sepa wringkle on pulling drag ÷ sepa dancer tension low ÷ ejector side block pulling drag no suction ÷ pulling grip fast forward moving error ÷ current stack sepa align no stop until 108 stack • *Cause*: ÷ leakage membran sepa dancer diafragm ÷ air hose adress side block switched with ejector1 pulling drag ÷ abnormality sequence on pulling grip forward and stack sepa align quantity • *C/M* : ÷ sepa wringkle on pulling drag, check suction air hose side block, no suction ÷ trace air hose line and find hose adress switched with ejector1 pulling drag, swap air hose ÷ manual check ejector side block ÷ setting speed control side block pulling drag ÷ sepa replacement ✅️ ÷ sepa dancer tension low, find leakage on diafragm, repair and replace membrane seal difragm ✅️ ÷ pulling grip fast moving forward error, plug unplug power and encoder pulling grip ❌️ ÷ cleaning line scalling pulling grip ❌️ ÷ check sequence by tia portal, abnormality on delay time fast forward, edit delay time ÷ current stack sepa align quantity abnormal, check program. Edit quantity by tia portal ✅️ • *Result* : Solved • *PIC* : BM Tech, PLC Tech`
         ];
 
         function showMessage(text, type = 'info') {
@@ -487,7 +420,7 @@
 
         function parseMessages() {
             const input = document.getElementById('messageInput').value.trim();
-            
+
             if (!input) {
                 showMessage('Please paste your WhatsApp messages first!', 'error');
                 return;
@@ -495,15 +428,15 @@
 
             try {
                 // Split messages by WhatsApp timestamp pattern
-                const messages = input.split(/(?=\[\d{1,2}\/\d{1,2} \d{1,2}\.\d{2} [AP]M\])/).filter(msg => msg.trim());
-                
+                const messages = input.split(/(?=\d{1,2}\/\d{1,2}\/\d{4},\s\d{2}:\d{2}\s-)/).filter(msg => msg.trim());
+
                 if (messages.length === 0) {
                     showMessage('No valid WhatsApp messages found!', 'error');
                     return;
                 }
 
                 const reports = parser.parseMessages(messages);
-                
+
                 if (reports.length === 0) {
                     showMessage('Could not parse any messages. Please check the format.', 'error');
                     return;
@@ -512,7 +445,7 @@
                 displayResults(reports);
                 enableExportButtons();
                 showMessage(`Successfully parsed ${reports.length} message(s)!`, 'success');
-                
+
             } catch (error) {
                 showMessage(`Error parsing messages: ${error.message}`, 'error');
             }
@@ -520,7 +453,7 @@
 
         function displayResults(reports) {
             const resultsDiv = document.getElementById('results');
-            
+
             let html = `
                 <div class="stats">
                     <strong>${reports.length}</strong> downtime reports parsed
@@ -533,49 +466,49 @@
                         <div class="report-header">
                             Report #${index + 1} - ${report.machine}
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Phone Number:</span>
                             <span class="field-value">${report.phoneNumber}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Timestamp:</span>
                             <span class="field-value">${report.timestamp}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Date:</span>
                             <span class="field-value">${report.date}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Time:</span>
                             <span class="field-value">${report.time}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Machine:</span>
                             <span class="field-value">${report.machine}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Alarm:</span>
                             <span class="field-value">${report.alarm}</span>
                         </div>
-                        
+
                         ${report.phenomenon ? `
                         <div class="report-field">
                             <span class="field-label">Phenomenon:</span>
                             <span class="field-value">${report.phenomenon}</span>
                         </div>
                         ` : ''}
-                        
+
                         <div class="report-field">
                             <span class="field-label">Cause:</span>
                             <span class="field-value">${report.cause}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Countermeasures:</span>
                             <div class="field-value">
@@ -584,22 +517,22 @@
                                 </ul>
                             </div>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Part Replacement:</span>
                             <span class="field-value">${report.partReplacement}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Result:</span>
                             <span class="field-value">${report.result}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">PIC:</span>
                             <span class="field-value">${report.pic}</span>
                         </div>
-                        
+
                         <div class="report-field">
                             <span class="field-label">Report ID:</span>
                             <span class="field-value small-text">${report.id}</span>
@@ -641,7 +574,7 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            
+
             showMessage(`${filename} downloaded successfully!`, 'success');
         }
 
